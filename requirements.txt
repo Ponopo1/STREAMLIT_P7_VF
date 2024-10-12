@@ -1,0 +1,15 @@
+joblib==1.3.2
+matplotlib==3.9.2
+numpy==1.26.4
+pandas==2.2.3
+Pillow==10.4.0
+Plost==0.2.5
+plotly==5.23.0
+pydantic==2.9.2
+Requests==2.32.3
+shap==0.39.0
+streamlit==1.19.0
+streamviz==5.1
+llvmlite==0.43.0
+numba==0.60.0
+altair==4.0.0
