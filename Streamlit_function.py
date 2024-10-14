@@ -64,8 +64,8 @@ def info_client(selected_client) :
 
 # Ligne 3
 def influence_valeur(selected_client,width,height):
-   st.markdown('### :blue[Facteur d\'influence locale du résultat]')
    shap_value_select = st.slider(label='Nombre de variable à visualiser',min_value=1,max_value=20)
+   st.markdown('### :blue[Facteur d\'influence locale du résultat]')
    responseclient_shap = requests.get(f"{API_URL}/shap_individual",params={"ID_CLIENT": selected_client, # Pour sélectionner le client dans GET
                                                                            "shap_values_class_1": selected_client,
                                                                            "observation": selected_client,
@@ -99,7 +99,7 @@ def influence_valeur(selected_client,width,height):
    ax_shap_glob.set_ylabel("Mean decrease")
    ax_shap_glob.set_xticklabels(top_importances.index, rotation=45, ha='right')
    fig_shap_glob.tight_layout()
-   return st.markdown('### :blue[Facteur d\'influence globaux]'),st.pyplot(fig),st.pyplot(fig_shap_glob)
+   return st.pyplot(fig),st.markdown('### :blue[Facteur d\'influence globaux]'),st.pyplot(fig_shap_glob)
 
 # Ligne 4
 def benchmark(selected_client,width,height) :
