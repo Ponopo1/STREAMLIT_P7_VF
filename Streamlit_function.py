@@ -151,7 +151,7 @@ def scatter(Variable_1,Variable_2,selected_client,width,height):
    ax_scatter.scatter(highlight_x, highlight_y, color='red', edgecolor='black', marker='*', s=150, zorder=5, label=f'ID {highlight_id}')
 
    # Masque pour les clients valide seuil à changer au besoin
-   valide = df['proba'] < 0.55
+   valide = df['proba'] > 0.55
    # Tracer les autres clients
    ax_scatter.scatter(df[Variable_1][~valide], df[Variable_2][~valide],
                        color='blue')
