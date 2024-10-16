@@ -21,7 +21,7 @@ class TestApi(unittest.TestCase):
 
         # Check si on a bien le rouge qui ressort
         mock_markdown.assert_any_call(''':red[CREDIT REFUSE]''')
-        print('La validation fonctionne')
+        print('La refus fonctionne')
     
     @patch('requests.get')
     @patch('streamlit.markdown')
@@ -36,7 +36,7 @@ class TestApi(unittest.TestCase):
 
         # Check si on a bien le vert qui ressort
         mock_markdown.assert_any_call(''':green[CREDIT VALIDE]''')
-        print('Le refus fonctionne')
+        print('Le validation fonctionne')
 
 if __name__ == '__main__':
     unittest.main()
