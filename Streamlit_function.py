@@ -151,13 +151,13 @@ def scatter(Variable_1,Variable_2,selected_client,width,height):
    ax_scatter.scatter(highlight_x, highlight_y, color='red', edgecolor='black', marker='*', s=150, zorder=5, label=f'ID {highlight_id}')
 
    # Masque pour les clients valide seuil à changer au besoin
-   valide = df['proba'] > 0.55
+   refus = df['proba'] > 0.55
    # Tracer les autres clients
-   ax_scatter.scatter(df[Variable_1][~valide], df[Variable_2][~valide],
+   ax_scatter.scatter(df[Variable_1][~refus], df[Variable_2][~refus],
                        color='blue')
    # Tracer les clients valide
-   ax_scatter.scatter(df[Variable_1][valide], df[Variable_2][valide],
-                       color='yellow', edgecolor='black', label='Valide')
+   ax_scatter.scatter(df[Variable_1][refus], df[Variable_2][refus],
+                       color='yellow', edgecolor='black', label='Refus')
 
    # Tracer le graphique de dispersion
    ax_scatter.set_xlabel(Variable_1)
