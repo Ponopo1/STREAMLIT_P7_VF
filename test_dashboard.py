@@ -19,8 +19,8 @@ class TestApi(unittest.TestCase):
         # On applique la fonction
         prediction(12345)  
 
-        # Check si on a bien le vert qui ressort
-        mock_markdown.assert_any_call(''':green[CREDIT VALIDE]''')
+        # Check si on a bien le rouge qui ressort
+        mock_markdown.assert_any_call(''':red[CREDIT REFUSE]''')
         print('La validation fonctionne')
     
     @patch('requests.get')
@@ -35,10 +35,8 @@ class TestApi(unittest.TestCase):
         prediction(12345)  
 
         # Check si on a bien le vert qui ressort
-        mock_markdown.assert_any_call(''':red[CREDIT REFUSE]''')
+        mock_markdown.assert_any_call(''':green[CREDIT VALIDE]''')
         print('Le refus fonctionne')
 
 if __name__ == '__main__':
     unittest.main()
-    
-

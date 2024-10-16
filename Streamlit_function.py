@@ -50,10 +50,10 @@ def prediction(selected_client) :
    prediction_value = prediction.get('prediction')
    # Visuel 
    st.markdown('### Indicateur prêt')
-   if prediction_value>0.7 :
-      return st.markdown(''':green[CREDIT VALIDE]'''), streamviz.gauge(prediction_value,grLow=0.6,grMid=0.7)
+   if prediction_value<0.55 :
+      return st.markdown(''':green[CREDIT VALIDE]'''), streamviz.gauge(prediction_value,gcLow="#00FF00",gcMid="#FFA500",gcHigh="#FFA500",grLow=0.6,grMid=0.55)
    else :
-      return st.markdown(''':red[CREDIT REFUSE]'''), streamviz.gauge(prediction_value,grLow=0.6,grMid=0.7)
+      return st.markdown(''':red[CREDIT REFUSE]'''), streamviz.gauge(prediction_value,gcLow="#00FF00",gcMid="#FFA500",gcHigh="#FFA500",grLow=0.6,grMid=0.55)
 
 # Ligne 2
 def info_client(selected_client) :
