@@ -50,10 +50,10 @@ def prediction(selected_client) :
    prediction_value = prediction.get('prediction')
    # Visuel 
    st.markdown('### Indicateur prêt')
-   if prediction_value<0.55 :
-      return st.markdown(''':green[CREDIT VALIDE]'''), streamviz.gauge(prediction_value,gcLow="#00FF00",gcMid="#FFA500",gcHigh="#FFA500",grLow=0.6,grMid=0.55)
+   if prediction_value<0.65 :
+      return st.markdown(''':green[CREDIT VALIDE]'''), streamviz.gauge(prediction_value,gcLow="#00FF00",gcMid="#FFA500",gcHigh="#FFA500",grLow=0.7,grMid=0.65)
    else :
-      return st.markdown(''':red[CREDIT REFUSE]'''), streamviz.gauge(prediction_value,gcLow="#00FF00",gcMid="#FFA500",gcHigh="#FFA500",grLow=0.6,grMid=0.55)
+      return st.markdown(''':red[CREDIT REFUSE]'''), streamviz.gauge(prediction_value,gcLow="#00FF00",gcMid="#FFA500",gcHigh="#FFA500",grLow=0.7,grMid=0.65)
 
 # Ligne 2
 def info_client(selected_client) :
@@ -151,7 +151,7 @@ def scatter(Variable_1,Variable_2,selected_client,width,height):
    ax_scatter.scatter(highlight_x, highlight_y, color='red', edgecolor='black', marker='*', s=150, zorder=5, label=f'ID {highlight_id}')
 
    # Masque pour les clients valide seuil à changer au besoin
-   refus = df['proba'] > 0.55
+   refus = df['proba'] > 0.65
    # Tracer les autres clients
    ax_scatter.scatter(df[Variable_1][~refus], df[Variable_2][~refus],
                        color='blue')
