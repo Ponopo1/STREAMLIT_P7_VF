@@ -53,7 +53,7 @@ def prediction(selected_client) :
    if prediction_value<0.65 :
       return st.markdown(''':green[CREDIT VALIDE]'''), streamviz.gauge(prediction_value,gcLow="#00FF00",gcMid="#FFA500",gcHigh="#FFA500",grLow=0.7,grMid=0.65)
    else :
-      return st.markdown(''':red[CREDIT REFUSE]'''), streamviz.gauge(prediction_value,gcLow="#00FF00",gcMid="#FFA500",gcHigh="#FFA500",grLow=0.7,grMid=0.65)
+      return st.markdown(''':red[CREDIT REFUSE]'''), streamviz.gauge(prediction_value,gcLow="#00FF00",gcMid="#FFA500",gcHigh="#FFA500",grLow=0.,grMid=0.65)
 
 # Ligne 2
 def info_client(selected_client) :
@@ -85,16 +85,16 @@ def influence_valeur(selected_client,width,height):
    information_importance_feat = response_importance_feat.json()
    features = information_importance_feat.get('features')
    importances = information_importance_feat.get('importances')
-   std_dev = information_importance_feat.get('std_dev')
+   #std_dev = information_importance_feat.get('std_dev')
    # Graphique de l'importance des features
-   std_series = pd.Series(std_dev, index=features)
+   #std_series = pd.Series(std_dev, index=features)
    forest_importances = pd.Series(importances, index=features)
    # Sélectionnez les X caractéristiques les plus importantes
    top_importances = forest_importances.nlargest(shap_value_select)
-   top_std = std_series[top_importances.index]  # Sélectionner les écarts-types correspondants
+   #top_std = std_series[top_importances.index]  # Sélectionner les écarts-types correspondants
    # Créer le graphique à barres
    fig_shap_glob, ax_shap_glob = plt.subplots(figsize=(width, height))
-   top_importances.plot.bar(yerr=top_std, ax=ax_shap_glob)
+   top_importances.plot.bar(ax=ax_shap_glob)#yerr=top_std
    ax_shap_glob.set_title("Feature importances générales")
    ax_shap_glob.set_ylabel("Mean decrease")
    ax_shap_glob.set_xticklabels(top_importances.index, rotation=45, ha='right')
