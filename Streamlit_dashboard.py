@@ -71,7 +71,7 @@ if Benchmark == True :
    with col5:
       st.sidebar.write("")
 
-   scatter(Variable_1,Variable_2,selected_client,width,height)
+   scatter(Variable_1,Variable_2,selected_client)
    
 else :
    st.markdown('')

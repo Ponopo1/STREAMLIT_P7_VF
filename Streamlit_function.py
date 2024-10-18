@@ -12,6 +12,9 @@ import shap
 import requests
 import json
 import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.graph_objects as go
+
 
 # URL de l'API FastAPI déployée sur Heroku
 API_URL = "https://api-projet7-open-bd8c05735794.herokuapp.com"
@@ -136,34 +139,61 @@ def benchmark(selected_client,width,height) :
    # Afficher le graphique
    return st.markdown('### :blue[Comparaison avec autres clients via Boxplot]'),st.pyplot(plt),numeric_cols
 
-def scatter(Variable_1,Variable_2,selected_client,width,height):
-   data = requests.post(f"{API_URL}/INFO_CLIENTS_GLOBAL")
-   df = pd.DataFrame(data.json())
-   # ID de l'individu à mettre en évidence
-   highlight_id = selected_client
-   # Création de la figure et des axes
-   fig_scatter, ax_scatter = plt.subplots(figsize=(width, height))
+def scatter(Variable_1, Variable_2, selected_client):
+    # Récupérer les données via l'API
+    data = requests.post(f"{API_URL}/INFO_CLIENTS_GLOBAL")
+    df = pd.DataFrame(data.json())
 
-   # Evidence client
-   highlight_row = df[df['ID'] == highlight_id]
-   highlight_x = highlight_row[Variable_1].values[0]
-   highlight_y = highlight_row[Variable_2].values[0]
-   ax_scatter.scatter(highlight_x, highlight_y, color='red', edgecolor='black', marker='*', s=150, zorder=5, label=f'ID {highlight_id}')
+    # ID de l'individu à mettre en évidence
+    highlight_id = selected_client
 
-   # Masque pour les clients valide seuil à changer au besoin
-   refus = df['proba'] > 0.65
-   # Tracer les autres clients
-   ax_scatter.scatter(df[Variable_1][~refus], df[Variable_2][~refus],
-                       color='blue')
-   # Tracer les clients valide
-   ax_scatter.scatter(df[Variable_1][refus], df[Variable_2][refus],
-                       color='yellow', edgecolor='black', label='Refus')
+    # Récupérer les données du client à mettre en évidence
+    highlight_row = df[df['ID'] == highlight_id]
+    highlight_x = highlight_row[Variable_1].values[0]
+    highlight_y = highlight_row[Variable_2].values[0]
 
-   # Tracer le graphique de dispersion
-   ax_scatter.set_xlabel(Variable_1)
-   ax_scatter.set_ylabel(Variable_2)
-   ax_scatter.set_title(f'Scatter Plot de {Variable_1} vs {Variable_2}')
-   ax_scatter.legend()
+    # Masque pour les clients refusés (selon un seuil proba > 0.65)
+    refus = df['proba'] > 0.65
 
-   # Afficher le graphique dans Streamlit
-   return st.pyplot(fig_scatter)
+    # Création de la figure Plotly
+    fig = go.Figure()
+
+    # Ajouter les autres clients (validés)
+    fig.add_trace(go.Scatter(
+        x=df[Variable_1][~refus],
+        y=df[Variable_2][~refus],
+        mode='markers',
+        marker=dict(color='blue'),
+        name='Clients validés'
+    ))
+
+    # Ajouter les clients refusés
+    fig.add_trace(go.Scatter(
+        x=df[Variable_1][refus],
+        y=df[Variable_2][refus],
+        mode='markers',
+        marker=dict(color='yellow', line=dict(width=1, color='black')),
+        name='Clients refusés'
+    ))
+
+    # Ajouter le client à mettre en évidence
+    fig.add_trace(go.Scatter(
+        x=[highlight_x],
+        y=[highlight_y],
+        mode='markers',
+        marker=dict(color='red', size=15, symbol='star', line=dict(width=2, color='black')),
+        name=f'ID {highlight_id}'
+    ))
+
+    # Mise en forme du graphique
+    fig.update_layout(
+        title=f'Scatter Plot de {Variable_1} vs {Variable_2}',
+        xaxis_title=Variable_1,
+        yaxis_title=Variable_2,
+        autosize=True,  # Taille automatique
+        height=600,     # Hauteur fixe, mais largeur dynamique
+        legend=dict(x=0, y=1.1, orientation="h")
+    )
+
+    # Afficher le graphique dans Streamlit avec largeur dynamique
+    st.plotly_chart(fig, use_container_width=True)
