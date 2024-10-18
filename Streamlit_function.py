@@ -44,8 +44,9 @@ def liste_client() :
    # Créer la selectbox dans la barre latérale avec les ID_CLIENT
    selected_client = st.sidebar.selectbox('SELECT', id_clients)
    # Afficher l'ID_CLIENT sélectionné
-   st.write(f"ID_CLIENT sélectionné : {selected_client}")
+   st.markdown(f"<h2 style='font-size: 24px;'>ID_CLIENT sélectionné : {selected_client}</h2>", unsafe_allow_html=True)
    return selected_client
+
 
 # Ligne 1
 def prediction(selected_client) :
@@ -54,11 +55,22 @@ def prediction(selected_client) :
    prediction_value = prediction.get('prediction')
    # Visuel 
    st.markdown('### Indicateur prêt')
-   if prediction_value<0.65 :
-      return st.markdown(''':green[CREDIT VALIDE]'''), streamviz.gauge(prediction_value,gcLow="#00FF00",gcMid="#FFA500",gcHigh="#FFA500",grLow=0.7,grMid=0.65)
-   else :
-      return st.markdown(''':red[CREDIT REFUSE]'''), streamviz.gauge(prediction_value,gcLow="#00FF00",gcMid="#FFA500",gcHigh="#FFA500",grLow=0.,grMid=0.65)
+    # Calculer le pourcentage
+   percentage = prediction_value * 100
 
+   if prediction_value < 0.65:
+        return st.markdown(
+            f"<h1 style='color: green; font-size: 36px;'>CREDIT VALIDE</h1>"
+            f"<h2 style='color: black;'> Le client a {percentage:.2f}% de chance à ne pas pouvoir rembourser son crédit.</h2>",
+            unsafe_allow_html=True
+        ), streamviz.gauge(prediction_value, gcLow="#00FF00", gcMid="#FFA500", gcHigh="#FFA500", grLow=0.7, grMid=0.65)
+   else:
+        return st.markdown(
+            f"<h1 style='color: red; font-size: 36px;'>CREDIT REFUSE</h1>"
+            f"<h2 style='color: black;'> Le client a {percentage:.2f}% de chance à ne pas pouvoir rembourser son crédit.</h2>",
+            unsafe_allow_html=True
+        ), streamviz.gauge(prediction_value, gcLow="#00FF00", gcMid="#FFA500", gcHigh="#FFA500", grLow=0., grMid=0.65)
+   
 # Ligne 2
 def info_client(selected_client) :
    responseclient = requests.get(f"{API_URL}/INFO_CLIENTS",params={"ID_CLIENT": selected_client})
