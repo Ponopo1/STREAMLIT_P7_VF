@@ -14,6 +14,7 @@ import json
 import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 
 # URL de l'API FastAPI déployée sur Heroku
@@ -197,3 +198,91 @@ def scatter(Variable_1, Variable_2, selected_client):
 
     # Afficher le graphique dans Streamlit avec largeur dynamique
     st.plotly_chart(fig, use_container_width=True)
+
+def distribution(Variable_1, Variable_2, selected_client):
+    # Récupérer les données via l'API
+    data = requests.post(f"{API_URL}/INFO_CLIENTS_GLOBAL")
+    df = pd.DataFrame(data.json())
+
+    # ID de l'individu à mettre en évidence
+    highlight_id = selected_client
+
+    # Récupérer les données du client à mettre en évidence
+    highlight_row = df[df['ID'] == highlight_id]
+    highlight_x = highlight_row[Variable_1].values[0]
+    highlight_y = highlight_row[Variable_2].values[0]
+
+    # Masque pour les clients refusés (selon un seuil proba > 0.65)
+    refus = df['proba'] > 0.65
+
+    # Création de la figure avec deux sous-graphiques côte à côte
+    fig = make_subplots(rows=1, cols=2, subplot_titles=(f"Distribution de {Variable_1}", f"Distribution de {Variable_2}"))
+
+    # Histogramme pour Variable_1
+    fig.add_trace(go.Histogram(
+        x=df[Variable_1][~refus],
+        name=f'{Variable_1} (Clients validés)',
+        marker=dict(color='blue'),
+        opacity=0.75
+    ), row=1, col=1)
+
+    fig.add_trace(go.Histogram(
+        x=df[Variable_1][refus],
+        name=f'{Variable_1} (Clients refusés)',
+        marker=dict(color='yellow', line=dict(width=1, color='black')),
+        opacity=0.75
+    ), row=1, col=1)
+
+    # Marqueur pour le client sélectionné (highlight) pour Variable_1
+    fig.add_trace(go.Scatter(
+        x=[highlight_x],
+        y=[0],  # On ne se sert pas des y pour un histogramme, mais on met 0
+        mode='markers',
+        marker=dict(color='red', size=15, symbol='star', line=dict(width=2, color='black')),
+        name=f'ID {highlight_id} ({Variable_1})'
+    ), row=1, col=1)
+
+    # Histogramme pour Variable_2
+    fig.add_trace(go.Histogram(
+        x=df[Variable_2][~refus],
+        name=f'{Variable_2} (Clients validés)',
+        marker=dict(color='blue'),
+        opacity=0.75
+    ), row=1, col=2)
+
+    fig.add_trace(go.Histogram(
+        x=df[Variable_2][refus],
+        name=f'{Variable_2} (Clients refusés)',
+        marker=dict(color='yellow', line=dict(width=1, color='black')),
+        opacity=0.75
+    ), row=1, col=2)
+
+    # Marqueur pour le client sélectionné (highlight) pour Variable_2
+    fig.add_trace(go.Scatter(
+        x=[highlight_y],
+        y=[0],
+        mode='markers',
+        marker=dict(color='red', size=15, symbol='star', line=dict(width=2, color='black')),
+        name=f'ID {highlight_id} ({Variable_2})'
+    ), row=1, col=2)
+
+    # Mise en forme du graphique
+    fig.update_layout(
+        title_text=f"Distributions de {Variable_1} et {Variable_2}",
+        autosize=True,
+        height=600,  # Hauteur du graphique
+        barmode='overlay',  # Superpose les barres d'histogrammes
+        showlegend=True
+    )
+
+    # Ajustement des axes et titres
+    fig.update_xaxes(title_text=Variable_1, row=1, col=1)
+    fig.update_xaxes(title_text=Variable_2, row=1, col=2)
+    fig.update_yaxes(title_text="Fréquence", row=1, col=1)
+    fig.update_yaxes(title_text="Fréquence", row=1, col=2)
+
+    # Afficher le graphique dans Streamlit avec largeur dynamique
+    st.plotly_chart(fig, use_container_width=True)
+
+
+

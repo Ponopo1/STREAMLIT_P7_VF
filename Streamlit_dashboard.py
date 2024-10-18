@@ -12,7 +12,7 @@ import shap
 import requests
 import json
 import matplotlib.pyplot as plt
-from Streamlit_function import logo,liste_client,prediction,info_client,influence_valeur,benchmark,scatter
+from Streamlit_function import logo,liste_client,prediction,info_client,influence_valeur,benchmark,scatter,distribution
 
 # URL de l'API FastAPI déployée sur Heroku
 API_URL = "https://api-projet7-open-bd8c05735794.herokuapp.com"
@@ -72,6 +72,7 @@ if Benchmark == True :
       st.sidebar.write("")
 
    scatter(Variable_1,Variable_2,selected_client)
+   distribution(Variable_1, Variable_2, selected_client)
    
 else :
    st.markdown('')
