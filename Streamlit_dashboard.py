@@ -17,6 +17,7 @@ from Streamlit_function import logo,liste_client,prediction,info_client,influenc
 # URL de l'API FastAPI déployée sur Heroku
 API_URL = "https://api-projet7-open-bd8c05735794.herokuapp.com"
 
+
 # 4. Mise en page, graphe streamlit
 st.set_page_config(layout='wide', initial_sidebar_state='expanded') # Permet d'avoir la fenetre qui s'étend avec la largeur de la page
 

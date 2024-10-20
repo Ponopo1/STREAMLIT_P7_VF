@@ -54,22 +54,16 @@ def prediction(selected_client) :
    prediction = responsepred.json()
    prediction_value = prediction.get('prediction')
    # Visuel 
-   st.markdown('### Indicateur prêt')
+   st.markdown('### :blue[Indicateur prêt]')
     # Calculer le pourcentage
    percentage = prediction_value * 100
 
    if prediction_value < 0.65:
-        return st.markdown(
-            f"<h1 style='color: green; font-size: 36px;'>CREDIT VALIDE</h1>"
-            f"<h2 style='color: black;'> Le client a {percentage:.2f}% de chance à ne pas pouvoir rembourser son crédit.</h2>",
-            unsafe_allow_html=True
-        ), streamviz.gauge(prediction_value, gcLow="#00FF00", gcMid="#FFA500", gcHigh="#FFA500", grLow=0.7, grMid=0.65)
+        return st.write(
+            f"<h1 style='color: green; font-size: 36px;'>CREDIT VALIDE</h1>",unsafe_allow_html=True),st.write(f"<h2 style='font-size: 24px;'>Le client a {percentage:.2f}% de chance à ne pas pouvoir rembourser son crédit.</h2>", unsafe_allow_html=True), streamviz.gauge(prediction_value, gcLow="#00FF00", gcMid="#FFA500", gcHigh="#FFA500", grLow=0.7, grMid=0.65)
    else:
-        return st.markdown(
-            f"<h1 style='color: red; font-size: 36px;'>CREDIT REFUSE</h1>"
-            f"<h2 style='color: black;'> Le client a {percentage:.2f}% de chance à ne pas pouvoir rembourser son crédit.</h2>",
-            unsafe_allow_html=True
-        ), streamviz.gauge(prediction_value, gcLow="#00FF00", gcMid="#FFA500", gcHigh="#FFA500", grLow=0., grMid=0.65)
+        return st.write(
+            f"<h1 style='color: red; font-size: 36px;'>CREDIT REFUSE</h1>",unsafe_allow_html=True),st.write(f"<h2 style='font-size: 24px;'>Le client a {percentage:.2f}% de chance à ne pas pouvoir rembourser son crédit.</h2>", unsafe_allow_html=True),streamviz.gauge(prediction_value, gcLow="#00FF00", gcMid="#FFA500", gcHigh="#FFA500", grLow=0.7, grMid=0.65)
    
 # Ligne 2
 def info_client(selected_client) :
@@ -80,7 +74,10 @@ def info_client(selected_client) :
 
 # Ligne 3
 def influence_valeur(selected_client,width,height):
-   shap_value_select = st.slider(label='Nombre de variable à visualiser',min_value=1,max_value=20)
+   
+   st.markdown("<h1 style='font-size:24px;'>Nombre de variable à visualiser</h1>", unsafe_allow_html=True)
+   shap_value_select = st.slider(label='',min_value=1,max_value=20)
+
    st.markdown('### :blue[Facteur d\'influence locale du résultat]')
    responseclient_shap = requests.get(f"{API_URL}/shap_individual",params={"ID_CLIENT": selected_client, # Pour sélectionner le client dans GET
                                                                            "shap_values_class_1": selected_client,
