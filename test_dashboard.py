@@ -10,7 +10,9 @@ class TestApi(unittest.TestCase):
     API_URL = "https://api-projet7-open-bd8c05735794.herokuapp.com"
     @patch('requests.get')
     @patch('streamlit.markdown')
-    def test_prediction_green(self, mock_markdown, mock_requests_get):
+    @patch('streamlit.write')
+    @patch('streamviz.gauge')
+    def test_prediction_green(self, mock_gauge, mock_write, mock_markdown, mock_requests_get):
         # Simulation de l'api qui renvoit 0.9
         mock_response = MagicMock()
         mock_response.json.return_value = {'prediction': 0.9}
@@ -25,7 +27,7 @@ class TestApi(unittest.TestCase):
     
     @patch('requests.get')
     @patch('streamlit.markdown')
-    def test_prediction_red(self, mock_markdown, mock_requests_get):
+    def test_prediction_red(self, mock_gauge, mock_write, mock_markdown, mock_requests_get):
         # Simulation de l'api qui renvoit 0.5
         mock_response = MagicMock()
         mock_response.json.return_value = {'prediction': 0.5}
