@@ -27,6 +27,8 @@ class TestApi(unittest.TestCase):
     
     @patch('requests.get')
     @patch('streamlit.markdown')
+    @patch('streamlit.write')
+    @patch('streamviz.gauge')
     def test_prediction_red(self, mock_gauge, mock_write, mock_markdown, mock_requests_get):
         # Simulation de l'api qui renvoit 0.5
         mock_response = MagicMock()
